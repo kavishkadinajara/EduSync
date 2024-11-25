@@ -62,7 +62,7 @@ export default function StudentRegister() {
                     </button>
                 </div>
 
-                <form action="" className="px-4 sm:px-8 md:px-20 lg:px-36" onSubmit={(e) => e.preventDefault()}>
+                <form action="" className="px-4 sm:px-8 md:px-20 lg:px-36 mt-7 md:mt-12 lg:mt-20" onSubmit={(e) => e.preventDefault()}>
                     <div className="grid grid-cols-1 gap-4 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium  w-full">Full Name</label>
@@ -71,65 +71,78 @@ export default function StudentRegister() {
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="border rounded-md w-full px-4 py-2 col-span-3"
+                                className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
-                        <div>
+                        <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Address</label>
                             <input
                                 type="text"
                                 name="address"
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="border rounded-md w-full px-4 py-2"
+                                className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
-                        <div>
-                            <label className="block mb-2 font-medium">Date of Birth</label>
-                            <input
+
+                        <div className="flex w-full gap-8">
+                            {/* Date of Birth */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 items-start justify-start">
+                                <label className="block mb-2 font-medium">
+                                Date of Birth
+                                </label>
+                                <input
                                 type="date"
                                 name="dob"
                                 value={formData.dob}
                                 onChange={handleChange}
-                                className="border rounded-md w-full px-4 py-2"
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 font-medium">Gender</label>
-                            <div className="flex items-center gap-4">
+                                className="border border-gray-300 rounded-lg w-full  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                />
+                            </div>
+
+                            {/* Gender */}
+                            <div className="flex flex-col md:flex-row gap-4 w-full items-end justify-end">
+                                <label className="block mb-2 font-medium">
+                                Gender
+                                </label>
+                                <div className="flex gap-6 md:w-3/4">
                                 <label className="flex items-center gap-2">
                                     <input
-                                        type="radio"
-                                        name="gender"
-                                        value="male"
-                                        checked={formData.gender === "male"}
-                                        onChange={handleChange}
+                                    type="radio"
+                                    name="gender"
+                                    value="male"
+                                    checked={formData.gender === "male"}
+                                    onChange={handleChange}
+                                    className="accent-blue-500 focus:ring-2 focus:ring-blue-400"
                                     />
-                                    Male
+                                    <span className="text-gray-700">Male</span>
                                 </label>
                                 <label className="flex items-center gap-2">
                                     <input
-                                        type="radio"
-                                        name="gender"
-                                        value="female"
-                                        checked={formData.gender === "female"}
-                                        onChange={handleChange}
+                                    type="radio"
+                                    name="gender"
+                                    value="female"
+                                    checked={formData.gender === "female"}
+                                    onChange={handleChange}
+                                    className="accent-blue-500 focus:ring-2 focus:ring-blue-400"
                                     />
-                                    Female
+                                    <span className="text-gray-700">Female</span>
                                 </label>
+                                </div>
                             </div>
                         </div>
-                        <div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Email</label>
                             <input
                                 type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="border rounded-md w-full px-4 py-2"
+                                className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
-                        <div>
+                        <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Telephone</label>
                             <input
                                 type="text"
@@ -137,7 +150,7 @@ export default function StudentRegister() {
                                 value={formData.telephone}
                                 onChange={handleChange}
                                 placeholder="ex: +94 712 345 678"
-                                className="border rounded-md w-full px-4 py-2"
+                                className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
                     </div>
