@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function StudentList() {
   const [darkMode, setDarkMode] = useState(false);
@@ -116,12 +118,12 @@ export default function StudentList() {
                   <td className="px-4 py-2 border">{student.telephone}</td>
                   <td className="px-4 py-2 border">
                     <div className="flex gap-4">
-                      <button className="text-gray-500 hover:text-gray-700">
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button className="text-red-500 hover:text-red-700">
-                        <i className="fas fa-trash"></i>
-                      </button>
+                        <button className="text-gray-500 hover:text-gray-700">
+                            <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                        <button className="text-red-500 hover:text-red-700">
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
                     </div>
                   </td>
                 </tr>
