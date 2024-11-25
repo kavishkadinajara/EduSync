@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div className="h-full min-h-screen rounded-md flex flex-col items-center justify-center relative w-screen">
+    <div className="h-full min-h-screen rounded-md flex flex-col items-center justify-center relative w-screen z-50">
       <RouterProvider router={router} />
     </div>
   </StrictMode>
