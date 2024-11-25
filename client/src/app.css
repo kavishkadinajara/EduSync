@@ -1,12 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 #root {
-  /* max-width: 1280px; */
+  max-width: 1280px;
   margin: 0 auto;
-  /* padding: 2rem; */
-  /* text-align: center; */
+  padding: 2rem;
+  text-align: center;
 }
 
 .logo {
@@ -44,69 +40,3 @@
 .read-the-docs {
   color: #888;
 }
-
-.fade-edges {
-  mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      black 20%,
-      black 80%,
-      transparent 100%
-    ),
-    linear-gradient(
-      to right,
-      transparent 0%,
-      black 20%,
-      black 80%,
-      transparent 100%
-    );
-  -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      black 20%,
-      black 80%,
-      transparent 100%
-    ),
-    linear-gradient(
-      to right,
-      transparent 0%,
-      black 20%,
-      black 80%,
-      transparent 100%
-    );
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
-}
-
- /* Customize the scrollbar */
- ::-webkit-scrollbar {
-  width: 0px;
-  /* Set the width of the scrollbar */
-}
-
-/* Customize the scrollbar track */
-::-webkit-scrollbar-track {
-  /* Set the color of the track */
-  background: rgb(0, 30, 10);
-}
-
-/* Customize the scrollbar thumb */
-::-webkit-scrollbar-thumb {
-  background: rgb(1, 145, 25);
-  /* Set the color of the thumb */
-  border-radius: 0px;
-  /* Round the corners of the thumb */
-}
-
-/* Customize the scrollbar thumb on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #002004;
-  /* Change thumb color on hover */
-}
-
-/* Customize the scrollbar button (top and bottom buttons) */
-::-webkit-scrollbar-button {
-  display: none;
-  /* Hide the scroll buttons */
-}
-

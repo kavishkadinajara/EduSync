@@ -4,12 +4,17 @@ import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import Root from './routes/Root';
+import StudentList from './routes/StudentList';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+  },
+  {
+    path: "/student-list",
+    element: <StudentList />,
   }
 ]);
 
