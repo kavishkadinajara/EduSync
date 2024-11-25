@@ -28,6 +28,7 @@ export default function StudentList() {
     },
   ];
 
+//   search by telephone number
   const handleSearch = () => {
     if (searchTerm.trim() === '') {
       setFilteredStudents(students); 
@@ -54,6 +55,7 @@ export default function StudentList() {
           darkMode ? 'bg-black' : 'bg-white'
         }`}
       >
+        {/* theme toggle button */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Student List</h1>
           <button
@@ -65,6 +67,7 @@ export default function StudentList() {
         </div>
 
         <div className='px-4 sm:px-8 md:px-20 lg:px-36 mt-7 md:mt-12 lg:mt-20'>
+            {/* search bar */}
             <label htmlFor="telephone" className="pb-5">
             Telephone
             </label>
@@ -88,6 +91,7 @@ export default function StudentList() {
                 Search
             </button>
             </div>
+            {/* student list */}
             <div className="overflow-x-auto">
             <table className="w-full border-collapse rounded-md">
                 <thead>

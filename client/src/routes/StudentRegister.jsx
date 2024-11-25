@@ -52,6 +52,7 @@ export default function StudentRegister() {
     return (
         <div className={`min-h-screen w-screen flex justify-center items-center ${darkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'}`}>
             <div className={`shadow-md rounded-md p-6 min-h-screen w-screen ${darkMode ? 'bg-black' : 'bg-white'}`}>
+                {/* theme toggle button */}
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">Student Registration</h1>
                     <button
@@ -65,6 +66,7 @@ export default function StudentRegister() {
                 <form action="" className="px-4 sm:px-8 md:px-20 lg:px-36 mt-7 md:mt-12 lg:mt-20" onSubmit={(e) => e.preventDefault()}>
                     <div className="grid grid-cols-1 gap-4 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-4">
+                            {/* full name */}
                             <label className="block mb-2 font-medium  w-full">Full Name</label>
                             <input
                                 type="text"
@@ -74,6 +76,7 @@ export default function StudentRegister() {
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
+                        {/* address */}
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Address</label>
                             <input
@@ -131,7 +134,7 @@ export default function StudentRegister() {
                                 </div>
                             </div>
                         </div>
-
+                        {/* email */}
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Email</label>
                             <input
@@ -142,6 +145,7 @@ export default function StudentRegister() {
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
+                        {/* phone */}
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Telephone</label>
                             <input
@@ -154,7 +158,7 @@ export default function StudentRegister() {
                             />
                         </div>
                     </div>
-                    
+                    {/* add student button */}
                     <div className="flex justify-end">
                         <button
                             onClick={addStudent}
@@ -163,7 +167,7 @@ export default function StudentRegister() {
                             Add
                         </button>
                     </div>
-
+                    {/* student data preview table */}
                     <table className="w-full mt-6 border-collapse border">
                         <thead>
                             <tr className="bg-gray-300  text-gray-800">
@@ -184,7 +188,7 @@ export default function StudentRegister() {
                             ))}
                         </tbody>
                     </table>
-
+                    {/* submit sutdent data */}
                     <div className="flex justify-end">
                         <button
                             onClick={handleSubmit}
