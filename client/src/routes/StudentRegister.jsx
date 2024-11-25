@@ -85,7 +85,7 @@ export default function StudentRegister() {
                             />
                         </div>
 
-                        <div className="flex w-full gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 ">
                             {/* Date of Birth */}
                             <div className="grid grid-cols-1 md:grid-cols-2 items-start justify-start">
                                 <label className="block mb-2 font-medium">
@@ -96,12 +96,12 @@ export default function StudentRegister() {
                                 name="dob"
                                 value={formData.dob}
                                 onChange={handleChange}
-                                className="border border-gray-300 rounded-lg w-full  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                className="border border-gray-300 rounded-lg w-full text-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
                             </div>
 
                             {/* Gender */}
-                            <div className="flex flex-col md:flex-row gap-4 w-full items-end justify-end">
+                            <div className="flex flex-col md:flex-row gap-4 w-full gap-x-20 items-end justify-end">
                                 <label className="block mb-2 font-medium">
                                 Gender
                                 </label>
@@ -154,16 +154,19 @@ export default function StudentRegister() {
                             />
                         </div>
                     </div>
-                    <button
-                        onClick={addStudent}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                        Add
-                    </button>
+                    
+                    <div className="flex justify-end">
+                        <button
+                            onClick={addStudent}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-end justify-end"
+                        >
+                            Add
+                        </button>
+                    </div>
 
                     <table className="w-full mt-6 border-collapse border">
                         <thead>
-                            <tr className="bg-gray-200">
+                            <tr className="bg-gray-300  text-gray-800">
                                 <th className="text-left px-4 py-2 border">Name</th>
                                 <th className="text-left px-4 py-2 border">Date of Birth</th>
                                 <th className="text-left px-4 py-2 border">Email</th>
@@ -182,12 +185,14 @@ export default function StudentRegister() {
                         </tbody>
                     </table>
 
-                    <button
-                        onClick={handleSubmit}
-                        className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
-                    >
-                        Submit
-                    </button>
+                    <div className="flex justify-end">
+                        <button
+                            onClick={handleSubmit}
+                            className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
