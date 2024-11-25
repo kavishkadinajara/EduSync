@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+// import { button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +28,7 @@ const ThemeSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={"sm"}>
+        <button className="btn-ghost btn-sm">
           {theme === "light" ? (
             <Sun
               key="light"
@@ -48,7 +48,7 @@ const ThemeSwitcher = () => {
               className={"text-muted-foreground"}
             />
           )}
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-content" align="start">
         <DropdownMenuRadioGroup
