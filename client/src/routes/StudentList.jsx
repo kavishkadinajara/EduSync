@@ -64,72 +64,74 @@ export default function StudentList() {
           </button>
         </div>
 
-        <label htmlFor="telephone" className="pb-5">
-          Telephone
-        </label>
-        <div className="flex items-center gap-4 mb-6">
-          <input
-            id="telephone"
-            type="text"
-            placeholder="ex: +94 712 345 678"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={`border rounded-md px-4 py-2 w-full max-w-md ${
-              darkMode
-                ? 'border-gray-600 bg-gray-700 text-white'
-                : 'border-gray-300 bg-white text-black'
-            }`}
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
-          >
-            Search
-          </button>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse rounded-md">
-            <thead>
-              <tr
-                className={`${
-                  darkMode ? 'bg-gray-700' : 'bg-gray-200'
+        <div className='px-4 sm:px-8 md:px-20 lg:px-36 mt-7 md:mt-12 lg:mt-20'>
+            <label htmlFor="telephone" className="pb-5">
+            Telephone
+            </label>
+            <div className="flex items-center gap-4 mb-6">
+            <input
+                id="telephone"
+                type="text"
+                placeholder="ex: +94 712 345 678"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={`border rounded-md px-4 py-2 w-full max-w-md ${
+                darkMode
+                    ? 'border-gray-600 bg-gray-700 text-white'
+                    : 'border-gray-300 bg-white text-black'
                 }`}
-              >
-                <th className="text-left px-4 py-2 border">Name</th>
-                <th className="text-left px-4 py-2 border">Date of Birth</th>
-                <th className="text-left px-4 py-2 border">Email</th>
-                <th className="text-left px-4 py-2 border">Telephone</th>
-                <th className="text-left px-4 py-2 border">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStudents.map((student, index) => (
-                <tr key={index}>
-                  <td className="px-4 py-2 border">{student.name}</td>
-                  <td className="px-4 py-2 border">{student.dob}</td>
-                  <td className="px-4 py-2 border">
-                    <a
-                      href={`mailto:${student.email}`}
-                      className="text-blue-500 underline"
-                    >
-                      {student.email}
-                    </a>
-                  </td>
-                  <td className="px-4 py-2 border">{student.telephone}</td>
-                  <td className="px-4 py-2 border">
-                    <div className="flex gap-4">
-                        <button className="text-gray-500 hover:text-gray-700">
-                            <FontAwesomeIcon icon={faEdit} />
-                        </button>
-                        <button className="text-red-500 hover:text-red-700">
-                            <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                    </div>
-                  </td>
+            />
+            <button
+                onClick={handleSearch}
+                className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
+            >
+                Search
+            </button>
+            </div>
+            <div className="overflow-x-auto">
+            <table className="w-full border-collapse rounded-md">
+                <thead>
+                <tr
+                    className={`${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                    }`}
+                >
+                    <th className="text-left px-4 py-2 border">Name</th>
+                    <th className="text-left px-4 py-2 border">Date of Birth</th>
+                    <th className="text-left px-4 py-2 border">Email</th>
+                    <th className="text-left px-4 py-2 border">Telephone</th>
+                    <th className="text-left px-4 py-2 border">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                {filteredStudents.map((student, index) => (
+                    <tr key={index}>
+                    <td className="px-4 py-2 border">{student.name}</td>
+                    <td className="px-4 py-2 border">{student.dob}</td>
+                    <td className="px-4 py-2 border">
+                        <a
+                        href={`mailto:${student.email}`}
+                        className="text-blue-500 underline"
+                        >
+                        {student.email}
+                        </a>
+                    </td>
+                    <td className="px-4 py-2 border">{student.telephone}</td>
+                    <td className="px-4 py-2 border">
+                        <div className="flex gap-4">
+                            <button className="text-gray-500 hover:text-gray-700">
+                                <FontAwesomeIcon icon={faEdit} />
+                            </button>
+                            <button className="text-red-500 hover:text-red-700">
+                                <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                        </div>
+                    </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            </div>
         </div>
       </div>
     </div>
