@@ -1,17 +1,18 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 
 export default function StudentRegister() {
-    const [formData, setFormData] = useState({
-        fullName: "",
-        address: "",
-        dob: "",
-        gender: "male",
-        email: "",
-        telephone: "",
-    });
 
     const [studentList, setStudentList] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
+    const [formData, setFormData] = useState({
+        fullName: "",
+        address: "",
+        dateOfBirth: "",
+        gender: "",
+        email: "",
+        telephone: "",
+    });
 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: light)");
@@ -29,24 +30,44 @@ export default function StudentRegister() {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+        setFormData({
+          ...formData,
+          [e.target.name]: e.target.value,
+        });
+      };
 
     const addStudent = () => {
-        setStudentList((prev) => [...prev, formData]);
-        setFormData({
-            fullName: "",
-            address: "",
-            dob: "",
-            gender: "male",
-            email: "",
-            telephone: "",
-        });
+       if(formData.fullName && formData.email) {
+           setStudentList([...studentList, formData]);
+           setFormData({
+             fullName: "",
+             address: "",
+             dateOfBirth: "",
+             gender: "",
+             email: "",
+             telephone: "",
+           });
+        }        
     };
 
-    const handleSubmit = () => {
-        console.log("Submitted Students: ", studentList);
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/students", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(studentList),
+            });
+      
+            if (response.ok) {
+              console.log("Data submitted successfully");
+            } else {
+              console.error("Error submitting data");
+            }
+          } catch (error) {
+            console.error("Error: ", error);
+          }
     };
 
     return (
@@ -96,8 +117,8 @@ export default function StudentRegister() {
                                 </label>
                                 <input
                                 type="date"
-                                name="dob"
-                                value={formData.dob}
+                                name="dateOfBirth"
+                                value={formData.dateOfBirth}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-lg w-full text-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
@@ -181,7 +202,7 @@ export default function StudentRegister() {
                             {studentList.map((student, index) => (
                                 <tr key={index}>
                                     <td className="px-4 py-2 border">{student.fullName}</td>
-                                    <td className="px-4 py-2 border">{student.dob}</td>
+                                    <td className="px-4 py-2 border">{student.dateOfBirth}</td>
                                     <td className="px-4 py-2 border">{student.email}</td>
                                     <td className="px-4 py-2 border">{student.telephone}</td>
                                 </tr>

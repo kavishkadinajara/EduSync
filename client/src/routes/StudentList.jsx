@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,6 +28,24 @@ export default function StudentList() {
       telephone: '+94 711 123 456',
     },
   ];
+
+  useEffect(() => {
+    fetchStudentList();
+  }, []);
+
+  const fetchStudentList = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/students');
+      if (response.ok) {
+        const data = await response.json();
+        setFilteredStudents(data);
+      } else {
+        console.error('Error fetching data');
+      }
+    }catch (error) {
+      console.error('Error: ', error);
+    }
+  }
 
 //   search by telephone number
   const handleSearch = () => {
