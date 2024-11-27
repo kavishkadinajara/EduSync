@@ -11,20 +11,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure MSSQL database connection
-builder.Services.AddDbContext<StudentDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<StudentDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Enable CORS for React frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // React frontend URL
+        policy.WithOrigins("http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
-
 
 var app = builder.Build();
 
@@ -35,7 +34,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
+
+// Apply the CORS policy
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 

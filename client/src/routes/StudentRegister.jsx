@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 
 export default function StudentRegister() {
@@ -6,9 +5,10 @@ export default function StudentRegister() {
     const [studentList, setStudentList] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: "",
+        id: "",
+        full_name: "",
         address: "",
-        dateOfBirth: "",
+        date_of_birth: "",
         gender: "",
         email: "",
         telephone: "",
@@ -37,12 +37,13 @@ export default function StudentRegister() {
       };
 
     const addStudent = () => {
-       if(formData.fullName && formData.email) {
+       if(formData.full_name && formData.email) {
            setStudentList([...studentList, formData]);
            setFormData({
-             fullName: "",
+             id: "",
+             full_name: "",
              address: "",
-             dateOfBirth: "",
+             date_of_birth: "",
              gender: "",
              email: "",
              telephone: "",
@@ -52,10 +53,12 @@ export default function StudentRegister() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/students", {
+            const response = await fetch("http://localhost:5000/api/student/AddStudents", {
               method: "POST",
+              mode: "no-cors",
               headers: {
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
               },
               body: JSON.stringify(studentList),
             });
@@ -91,8 +94,8 @@ export default function StudentRegister() {
                             <label className="block mb-2 font-medium  w-full">Full Name</label>
                             <input
                                 type="text"
-                                name="fullName"
-                                value={formData.fullName}
+                                name="full_name"
+                                value={formData.full_name}
                                 onChange={handleChange}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
@@ -117,8 +120,8 @@ export default function StudentRegister() {
                                 </label>
                                 <input
                                 type="date"
-                                name="dateOfBirth"
-                                value={formData.dateOfBirth}
+                                name="date_of_birth"
+                                value={formData.date_of_birth}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-lg w-full text-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
@@ -201,8 +204,8 @@ export default function StudentRegister() {
                         <tbody>
                             {studentList.map((student, index) => (
                                 <tr key={index}>
-                                    <td className="px-4 py-2 border">{student.fullName}</td>
-                                    <td className="px-4 py-2 border">{student.dateOfBirth}</td>
+                                    <td className="px-4 py-2 border">{student.full_name}</td>
+                                    <td className="px-4 py-2 border">{student.date_of_birth}</td>
                                     <td className="px-4 py-2 border">{student.email}</td>
                                     <td className="px-4 py-2 border">{student.telephone}</td>
                                 </tr>

@@ -2,12 +2,12 @@ namespace StudentRegistrationAPI.Models
 {
     public class Student
     {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Address { get; set; }
-        public string DateOfBirth { get; set; }
-        public string Gender { get; set; }
-        public string Email { get; set; }
-        public string Telephone { get; set; }
+        public string id { get; set; }
+        public string full_name { get; set; }
+        public string address { get; set; }
+        public string date_of_birth { get; set; }
+        public string gender { get; set; }
+        public string email { get; set; }
+        public string telephone { get; set; }
     }
 }
