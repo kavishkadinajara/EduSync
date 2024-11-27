@@ -7,6 +7,8 @@ export default function StudentList() {
   const [darkMode, setDarkMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [ isUpdate, setIsUpdate ] = useState(false);
+  const [ dataForUpdate, setDataForUpdate ] = useState([]);
 
   useEffect(() => {
     fetchStudentList();
@@ -41,24 +43,89 @@ export default function StudentList() {
         setFilteredStudents([data]);
       } else {
         console.error('No student found with the given telephone number');
-        setFilteredStudents([]); // Clear the list if no match
+        setFilteredStudents([]);
       }
     } catch (error) {
       console.error('Error: ', error);
-      setFilteredStudents([]); // Clear the list on error
+      setFilteredStudents([]); 
     }
   };
 
+  // delete student
+  const handleDelete = async (studentId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/student/DeleteStudent/${studentId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setFilteredStudents((prevStudents) =>
+          prevStudents.filter((student) => student.id !== studentId)
+        );
+      }
+    } catch (error) { 
+      console.error('Error: ', error
+        );
+    }
+  }
+
+  // update student
+  const openUpdateForm = async (telephone) => {
+    setIsUpdate(true);
+    // get student details by telephone
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/student/GetStudentByPhone/${telephone}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setDataForUpdate([data]);
+        console.log(data);
+      } else {
+        console.error('No student found with the given telephone number');
+      }
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  }
+
+  const updateStudent = async (name, address, telephone, email, dob) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/student/UpdateStudent/${dataForUpdate[0].id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: dataForUpdate[0].id,
+            full_name: name,
+            telephone: telephone,
+            email: email,
+            date_of_birth: dob,
+            address: address,
+            gender: dataForUpdate[0].gender,
+          }),
+        }
+      );
+      if (response.ok) {
+        console.log('Student updated successfully');
+        setIsUpdate(false);
+        setDataForUpdate([]);
+    }
+      } catch (error) {
+        console.error('Error: ', error);
+      }
+  }
+
   return (
     <div
-      className={`flex justify-center items-center min-h-screen w-screen ${
-        darkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'
-      }`}
+      className={`flex justify-center items-center min-h-screen w-screen ${darkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'}`}
     >
       <div
         className={`rounded-lg shadow-lg w-screen min-h-screen p-6 ${
           darkMode ? 'bg-gray-900' : 'bg-white'
-        }`}
+        } ${isUpdate ? `filter blur-md ${darkMode ? 'dark:bg-black bg-gray-500' : 'bg-gray-500'}` : ''}`}
       >
         {/* Theme toggle button */}
         <div className="flex justify-between items-center mb-6">
@@ -130,10 +197,10 @@ export default function StudentList() {
                       <td className="px-4 py-2 border">{data.telephone}</td>
                       <td className="px-4 py-2 border">
                         <div className="flex gap-4">
-                          <button className="text-gray-500 hover:text-gray-700">
+                          <button className="text-gray-500 hover:text-gray-700" onClick={() => openUpdateForm(data.telephone)}>
                             <FontAwesomeIcon icon={faEdit} />
                           </button>
-                          <button className="text-red-500 hover:text-red-700">
+                          <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(data.id)}>
                             <FontAwesomeIcon icon={faTrash} />
                           </button>
                         </div>
@@ -148,6 +215,98 @@ export default function StudentList() {
               No students found.
             </p>
           )}
+        </div>
+      </div>
+
+      {/* update student */}
+      <div id='updateForm' className={`${darkMode ? 'bg-gray-700' : 'bg-gray-200'} ${isUpdate ? 'block' : 'hidden'} fixed top-10 justify-center items-center max-w-7xl`}>
+        <div className="bg-white p-4 rounded-md shadow-lg">
+          <h1 className="text-2xl font-bold">Update Student</h1>
+          <form>
+
+            <label htmlFor="name" className="block mt-4">
+              Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Full Name"
+              className="border rounded-md px-4 py-2 w-full"
+              defaultValue={dataForUpdate.length > 0 ? dataForUpdate[0].full_name : ''}
+            />
+
+            <label htmlFor="dob" className="block mt-4">
+              Date of Birth
+            </label>
+            <input
+              id="dob"
+              name="dob"
+              type="date"
+              className="border rounded-md px-4 py-2 w-full"
+              defaultValue={dataForUpdate.length > 0 ? dataForUpdate[0].date_of_birth : ''}
+            />
+
+            <label htmlFor="email" className="block mt-4">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder=""
+              className="border rounded-md px-4 py-2 w-full"
+              defaultValue={dataForUpdate.length > 0 ? dataForUpdate[0].email : ''}
+            />
+
+            <label htmlFor="telephone" className="block mt-4">
+              Telephone
+            </label>
+            <input
+            id="telephone"
+            name="telephone"
+            type="text"
+            placeholder=""
+            className="border rounded-md px-4 py-2 w-full"
+            defaultValue={dataForUpdate.length > 0 ? dataForUpdate[0].telephone : ''}
+          />
+
+          <label htmlFor="address" className="block mt-4">
+            Address
+          </label>
+          <input
+            id="address"
+            name="address"
+            type="text"
+            placeholder=""
+            className="border rounded-md px-4 py-2 w-full"
+            defaultValue={dataForUpdate.length > 0 ? dataForUpdate[0].address : ''}
+            />
+
+           <div className="flex justify-between mt-4">
+            <div>
+            <button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-4" onClick={() => {
+                const name = document.getElementById('name').value;
+                const address = document.getElementById('address').value;
+                const telephone = document.getElementById('telephone').value;
+                const email = document.getElementById('email').value;
+                const dob = document.getElementById('dob').value;
+                updateStudent(name, address, telephone, email, dob);
+              }}>
+              Submit
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => setIsUpdate(false)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md mt-4">
+                Cancel
+              </button>
+            </div>
+           </div>
+          </form>
         </div>
       </div>
     </div>

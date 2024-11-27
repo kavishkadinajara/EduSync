@@ -52,9 +52,9 @@ namespace server.Controllers
 			// if (validStudents.Count < students.Count){
 			// 	return BadRequest("Some students were not added because their telephone numbers are not unique.");
 			// }
-			if (validStudents.Count == students.Count){
-				return BadRequest("All students were not added because their telephone numbers are not unique.");
-			}
+			// if (validStudents.Count == students.Count){
+			// 	return BadRequest("All students were not added because their telephone numbers are not unique.");
+			// }
 
 
 			// Add valid students to database

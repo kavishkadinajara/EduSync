@@ -5,7 +5,7 @@ export default function StudentRegister() {
     const [studentList, setStudentList] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
     const [formData, setFormData] = useState({
-        id: "",
+        id: "1",
         full_name: "",
         address: "",
         date_of_birth: "",
@@ -53,11 +53,12 @@ export default function StudentRegister() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/student/AddStudents", {
+            const response = await fetch("http://localhost:5000/api/student/AddStudent", {
               method: "POST",
               mode: "no-cors",
               headers: {
                 "Content-Type": "application/json",
+                "accept": "*/*",
                 "Access-Control-Allow-Origin": "*",
               },
               body: JSON.stringify(studentList),
