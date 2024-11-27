@@ -1,13 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Alert from '@mui/material/Alert';
+
 
 export default function StudentRegister() {
 
     const [studentList, setStudentList] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
     const [formData, setFormData] = useState({
-        id: "1",
+        id: "",
         full_name: "",
         address: "",
         date_of_birth: "",
@@ -15,6 +17,9 @@ export default function StudentRegister() {
         email: "",
         telephone: "",
     });
+    const [alert, setAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [checkFields, setCheckFields] = useState(false);
 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: light)");
@@ -32,6 +37,8 @@ export default function StudentRegister() {
     }, []);
 
     const handleChange = (e) => {
+        setCheckFields(true);
+
         setFormData({
           ...formData,
           [e.target.name]: e.target.value,
@@ -59,16 +66,29 @@ export default function StudentRegister() {
             const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
             if (response.ok) {
               console.log("Data submitted successfully");
-              alert(response.data);
+            //   alert(response.data);
             } else {
               console.error("Error submitting data");
               console.log(studentList);
-              alert(response.data);
+            //   alert(response.data);
             }
         } catch (error) {
             console.error("Error: ", error);
           }
     };
+
+    const generateAlertMsg = (message, time) => {
+        setAlert(true);
+        setAlertMessage(message);
+        setTimeout(() => {
+            setAlertMessage("");
+        }
+        , time || 4000);
+    };
+        // const handleDelete = (id) => {
+        //     setStudentList(studentList.filter((student) => student.id !== id)); 
+        // }
+        
 
     return (
         <div className={`min-h-screen w-screen flex justify-center items-center ${darkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'}`}>
@@ -107,7 +127,9 @@ export default function StudentRegister() {
                                 name="address"
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="border rounded-md col-span-3 w-full px-4 py-2"
+                                className={`border rounded-md col-span-3 w-full px-4 py-2`}
+                                readOnly={!formData.full_name}
+                                onClick={() => generateAlertMsg(!formData.full_name ? `Please fill the Full Name field first` : "", 4000)}
                             />
                         </div>
 
@@ -122,12 +144,15 @@ export default function StudentRegister() {
                                 name="date_of_birth"
                                 value={formData.date_of_birth}
                                 onChange={handleChange}
-                                className="border border-gray-300 rounded-lg w-full text-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                readOnly={!formData.full_name || !formData.address}
+                                onClick={() => generateAlertMsg((!formData.full_name && !formData.address) ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : (!formData.address? `Please fill the Address field first`: "")), 4000)}
+                                className="border border-gray-300 rounded-lg w-full text-black bg-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
                             </div>
 
                             {/* Gender */}
-                            <div className="flex flex-col md:flex-row gap-4 w-full gap-x-20 items-end justify-end">
+                            <div className="flex flex-col md:flex-row gap-4 w-full gap-x-20 items-end justify-end"
+                            onClick={() => generateAlertMsg((!formData.full_name && !formData.address && !formData.date_of_birth) ? `Please fill the Full Name, Address and Date of Birth fields first` : (!formData.full_name && !formData.address ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : `Please fill the Address field first and Birth fields first`)) , 4000)}>
                                 <label className="block mb-2 font-medium">
                                 Gender
                                 </label>
@@ -139,7 +164,7 @@ export default function StudentRegister() {
                                     value="male"
                                     checked={formData.gender === "male"}
                                     onChange={handleChange}
-                                    className="accent-blue-500 focus:ring-2 focus:ring-blue-400"
+                                    disabled={!formData.full_name || !formData.address || !formData.date_of_birth}
                                     />
                                     <span className="text-gray-700">Male</span>
                                 </label>
@@ -151,6 +176,7 @@ export default function StudentRegister() {
                                     checked={formData.gender === "female"}
                                     onChange={handleChange}
                                     className="accent-blue-500 focus:ring-2 focus:ring-blue-400"
+                                    disabled={!formData.full_name || !formData.address || !formData.date_of_birth}
                                     />
                                     <span className="text-gray-700">Female</span>
                                 </label>
@@ -165,6 +191,8 @@ export default function StudentRegister() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
+                                readOnly={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender}
+                                onClick={() => generateAlertMsg((!formData.full_name && !formData.address && !formData.date_of_birth && !formData.gender) ? `Please fill the Full Name, Address, Date of Birth and select gender first` : (!formData.full_name && !formData.address && !formData.date_of_birth ? `Please fill the Full Name, Address and Date of Birth fields first` : (!formData.full_name && !formData.address ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : (!formData.address? `Please fill the Address field first`: "")))), 4000)}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
@@ -177,6 +205,7 @@ export default function StudentRegister() {
                                 value={formData.telephone}
                                 onChange={handleChange}
                                 placeholder="ex: +94 712 345 678"
+                                disabled={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender || !formData.email}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
@@ -185,6 +214,7 @@ export default function StudentRegister() {
                     <div className="flex justify-end">
                         <button
                             onClick={addStudent}
+                            disabled={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender || !formData.email || !formData.telephone}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-end justify-end"
                         >
                             Add
@@ -221,6 +251,10 @@ export default function StudentRegister() {
                         </button>
                     </div>
                 </form>
+            </div>
+
+            <div className={`fixed flex top-12 justify-center ${alertMessage? 'block' : 'hidden'}`}>
+                <Alert severity="warning">{alertMessage}</Alert>
             </div>
         </div>
     );
