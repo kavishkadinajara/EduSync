@@ -123,6 +123,23 @@ namespace server.Controllers
 			}
 		}
 
+		// Get student by ID
+		[HttpGet("GetStudentById/{id}")]
+		public async Task<IActionResult> GetStudentById(string id){
+			if (string.IsNullOrEmpty(id)){
+			return BadRequest("Student ID is required.");
+			}
+			try{
+				var student = await _context.Students.FirstOrDefaultAsync(s => s.id == id);
+				if (student == null){
+					return NotFound("Student not found.");
+				}
+				return Ok(student);
+			}catch (Exception ex){
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
 		// Update student
 		[HttpPut("UpdateStudent/{id}")]
 		public async Task<IActionResult> UpdateStudent(string id, [FromBody] Student student){

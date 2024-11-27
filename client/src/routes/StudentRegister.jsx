@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function StudentRegister() {
 
@@ -51,32 +53,28 @@ export default function StudentRegister() {
         }        
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await fetch("http://localhost:5000/api/student/AddStudent", {
-              method: "POST",
-              mode: "no-cors",
-              headers: {
-                "Content-Type": "application/json",
-                "accept": "*/*",
-                "Access-Control-Allow-Origin": "*",
-              },
-              body: JSON.stringify(studentList),
-            });
-      
+            const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
             if (response.ok) {
               console.log("Data submitted successfully");
+              alert(response.data);
             } else {
               console.error("Error submitting data");
+              console.log(studentList);
+              alert(response.data);
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Error: ", error);
           }
     };
 
     return (
         <div className={`min-h-screen w-screen flex justify-center items-center ${darkMode ? 'bg-black text-white' : 'bg-gray-100 text-black'}`}>
-            <div className={`shadow-md rounded-md p-6 min-h-screen w-screen ${darkMode ? 'bg-black' : 'bg-white'}`}>
+            <div className={`shadow-md rounded-md p-6 min-h-screen w-screen ${
+          darkMode ? 'bg-gray-900' : 'bg-white'
+        }`}>
                 {/* theme toggle button */}
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">Student Registration</h1>
@@ -113,7 +111,7 @@ export default function StudentRegister() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 ">
+                        <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-x-5">
                             {/* Date of Birth */}
                             <div className="grid grid-cols-1 md:grid-cols-2 items-start justify-start">
                                 <label className="block mb-2 font-medium">

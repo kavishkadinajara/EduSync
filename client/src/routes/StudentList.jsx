@@ -69,12 +69,12 @@ export default function StudentList() {
   }
 
   // update student
-  const openUpdateForm = async (telephone) => {
+  const openUpdateForm = async (id) => {
     setIsUpdate(true);
     // get student details by telephone
     try {
       const response = await fetch(
-        `http://localhost:5000/api/student/GetStudentByPhone/${telephone}`
+        `http://localhost:5000/api/student/GetStudentById/${id}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -100,7 +100,7 @@ export default function StudentList() {
           body: JSON.stringify({
             id: dataForUpdate[0].id,
             full_name: name,
-            telephone: telephone,
+            telephone: dataForUpdate[0].telephone,
             email: email,
             date_of_birth: dob,
             address: address,
@@ -110,8 +110,10 @@ export default function StudentList() {
       );
       if (response.ok) {
         console.log('Student updated successfully');
+        console.log(dataForUpdate[0].id + ' ' + name + ' ' + address + ' ' + telephone + ' ' + email + ' ' + dob);
         setIsUpdate(false);
         setDataForUpdate([]);
+        fetchStudentList();
     }
       } catch (error) {
         console.error('Error: ', error);
@@ -197,7 +199,7 @@ export default function StudentList() {
                       <td className="px-4 py-2 border">{data.telephone}</td>
                       <td className="px-4 py-2 border">
                         <div className="flex gap-4">
-                          <button className="text-gray-500 hover:text-gray-700" onClick={() => openUpdateForm(data.telephone)}>
+                          <button className="text-gray-500 hover:text-gray-700" onClick={() => openUpdateForm(data.id)}>
                             <FontAwesomeIcon icon={faEdit} />
                           </button>
                           <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(data.id)}>
