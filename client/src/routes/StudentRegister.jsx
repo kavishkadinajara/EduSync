@@ -85,9 +85,24 @@ export default function StudentRegister() {
         }
         , time || 4000);
     };
-        // const handleDelete = (id) => {
-        //     setStudentList(studentList.filter((student) => student.id !== id)); 
-        // }
+    
+    const checkEmail = (e) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(e.target.value)) {
+            handleChange(e);
+        } else {
+            generateAlertMsg("Invalid email format", 4000);
+        }
+    }
+
+    const telephoneValidation = (e) => {
+        const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{2})[-. ]?([0-9]{3})$/;
+        if (phoneRegex.test(e.target.value)) {
+            handleChange(e);
+        } else {
+            generateAlertMsg("Invalid phone number format", 4000);
+        }
+    }
         
 
     return (
@@ -145,14 +160,21 @@ export default function StudentRegister() {
                                 value={formData.date_of_birth}
                                 onChange={handleChange}
                                 readOnly={!formData.full_name || !formData.address}
-                                onClick={() => generateAlertMsg((!formData.full_name && !formData.address) ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : (!formData.address? `Please fill the Address field first`: "")), 4000)}
+                                onClick={() => generateAlertMsg(
+                                    !formData.full_name ? `Please fill the Full Name field first` :
+                                    !formData.address ? `Please fill the Address field first` : "", 4000)}
                                 className="border border-gray-300 rounded-lg w-full text-black bg-black dark:text-white  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
                             </div>
 
                             {/* Gender */}
                             <div className="flex flex-col md:flex-row gap-4 w-full gap-x-20 items-end justify-end"
-                            onClick={() => generateAlertMsg((!formData.full_name && !formData.address && !formData.date_of_birth) ? `Please fill the Full Name, Address and Date of Birth fields first` : (!formData.full_name && !formData.address ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : `Please fill the Address field first and Birth fields first`)) , 4000)}>
+                            onClick={() => generateAlertMsg(
+                                    !formData.full_name ? `Please fill the Full Name field first` :
+                                    !formData.address ? `Please fill the Address field first` :
+                                    !formData.date_of_birth ? `Please fill the Date of Birth field first` : "", 4000
+                                )
+                            }>
                                 <label className="block mb-2 font-medium">
                                 Gender
                                 </label>
@@ -182,35 +204,50 @@ export default function StudentRegister() {
                                 </label>
                                 </div>
                             </div>
-                        </div>
-                        {/* email */}
-                        <div className="grid grid-cols-1 md:grid-cols-4">
-                            <label className="block mb-2 font-medium">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                readOnly={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender}
-                                onClick={() => generateAlertMsg((!formData.full_name && !formData.address && !formData.date_of_birth && !formData.gender) ? `Please fill the Full Name, Address, Date of Birth and select gender first` : (!formData.full_name && !formData.address && !formData.date_of_birth ? `Please fill the Full Name, Address and Date of Birth fields first` : (!formData.full_name && !formData.address ? `Please fill the Full Name and Address fields first` : (!formData.full_name ? `Please fill the Full Name field first` : (!formData.address? `Please fill the Address field first`: "")))), 4000)}
-                                className="border rounded-md col-span-3 w-full px-4 py-2"
-                            />
-                        </div>
-                        {/* phone */}
+                            </div>
+                            {/* email */}
+                            <div className="grid grid-cols-1 md:grid-cols-4">
+                                <label className="block mb-2 font-medium">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    readOnly={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender}
+                                    onClick={(e) => {generateAlertMsg(
+                                                !formData.full_name ? `Please fill the Full Name field first` :
+                                                !formData.address ? `Please fill the Address field first` :
+                                                !formData.date_of_birth ? `Please fill the Date of Birth field first` :
+                                                !formData.gender ? `Please select the Gender first` : "", 4000
+                                            );
+                                            
+                                        }
+                                    }
+                                    className="border rounded-md col-span-3 w-full px-4 py-2"
+                                />
+                            </div>
+                            {/* phone */}
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Telephone</label>
                             <input
-                                type="text"
+                                type="tel"
                                 name="telephone"
+                                pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                                 value={formData.telephone}
                                 onChange={handleChange}
+                                // onChange={handleChange}
                                 placeholder="ex: +94 712 345 678"
-                                disabled={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender || !formData.email}
+                                readOnly={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender || !formData.email }
+                                onClick={() => generateAlertMsg(
+                                    !formData.full_name ? `Please fill the Full Name field first` :
+                                    !formData.address ? `Please fill the Address field first` :
+                                    !formData.date_of_birth ? `Please fill the Date of Birth field first` :
+                                    !formData.gender ? `Please select the Gender first` :
+                                    !formData.email ? `Please fill the Email field first` : "", 4000
+                                )}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
-                    </div>
-                    {/* add student button */}
                     <div className="flex justify-end">
                         <button
                             onClick={addStudent}
@@ -220,6 +257,8 @@ export default function StudentRegister() {
                             Add
                         </button>
                     </div>
+
+
                     {/* student data preview table */}
                     <table className="w-full mt-6 border-collapse border">
                         <thead>
@@ -249,6 +288,7 @@ export default function StudentRegister() {
                         >
                             Submit
                         </button>
+                    </div>
                     </div>
                 </form>
             </div>

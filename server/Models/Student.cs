@@ -9,5 +9,7 @@ namespace StudentRegistrationAPI.Models
         public string gender { get; set; }
         public string email { get; set; }
         public string telephone { get; set; }
+        public string status { get; set; }
+        public DateTime created_at { get; set; }
     }
 }

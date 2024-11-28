@@ -44,18 +44,10 @@ namespace server.Controllers
 					invalidStudents.Add(student);
 				}
 			}
-//return BadRequest($"Student with telephone number {student.telephone} already exists.");
-			// No valid students to add
+
 			if (validStudents.Count == 0){
 				return BadRequest("No valid students to add.");
 			}
-			// if (validStudents.Count < students.Count){
-			// 	return BadRequest("Some students were not added because their telephone numbers are not unique.");
-			// }
-			// if (validStudents.Count == students.Count){
-			// 	return BadRequest("All students were not added because their telephone numbers are not unique.");
-			// }
-
 
 			// Add valid students to database
 			try{
@@ -89,9 +81,14 @@ namespace server.Controllers
 		// Add student
 		[HttpPost("AddStudent")]
 		public async Task<IActionResult> AddStudent([FromBody] Student student){
+			var validStudent = new List<Student>();
 			if (student == null){
 			return BadRequest("No student data received.");
 			}
+			if (IsUniqueTelephone(student.telephone)){
+					student.id = GenerateStudentId();
+					validStudent.Add(student);
+				}
 
 			try{
 				student.id = GenerateStudentId();
