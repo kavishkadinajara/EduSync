@@ -2,10 +2,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function StudentRegister() {
 
+    const navigate = useNavigate();
     const [studentList, setStudentList] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
     const [formData, setFormData] = useState({
@@ -16,10 +20,22 @@ export default function StudentRegister() {
         gender: "",
         email: "",
         telephone: "",
+        status: "pending",
     });
     const [alert, setAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [checkFields, setCheckFields] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editData, setEditData] = useState({
+        id: "",
+        full_name: "",
+        address: "",
+        date_of_birth: "",
+        gender: "",
+        email: "",
+        telephone: "",
+        status: "pending",
+    });
 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: light)");
@@ -36,6 +52,11 @@ export default function StudentRegister() {
         };
     }, []);
 
+    const temporyId = () => {
+        const id = Math.floor(Math.random() * 1000000);
+        return id;
+    }
+
     const handleChange = (e) => {
         setCheckFields(true);
 
@@ -45,11 +66,38 @@ export default function StudentRegister() {
         });
       };
 
-    const addStudent = () => {
-       if(formData.full_name && formData.email) {
+    // const addStudent = () => {
+    //    if(formData.full_name && formData.email) {
+    //        setStudentList([...studentList, formData]);
+    //        setFormData({
+    //          id: temporyId(),
+    //          full_name: "",
+    //          address: "",
+    //          date_of_birth: "",
+    //          gender: "",
+    //          email: "",
+    //          telephone: "",
+    //        });
+    //     }        
+    //     console.log(studentList);
+    // };
+
+    const addStudent = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:5000/api/student/AddStudent", formData);
+            if (response.ok) {
+              console.log("Data submitted successfully");
+            } else {
+                console.error("Error submitting data");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        if(formData.full_name && formData.email) {
            setStudentList([...studentList, formData]);
            setFormData({
-             id: "",
+             id: {temporyId},
              full_name: "",
              address: "",
              date_of_birth: "",
@@ -57,24 +105,48 @@ export default function StudentRegister() {
              email: "",
              telephone: "",
            });
-        }        
-    };
+        }
+    }
 
+    const handleDelete = (id) => {
+        setStudentList(studentList.filter((student) => student.id !== id));
+    };
+    
+
+    const updateData = async (id) => {
+        const student = studentList.find((student) => student.id === id);
+        setEditData({
+            id: student.id,
+            full_name: student.full_name,
+            address: student.address,
+            date_of_birth: student.date_of_birth,
+            gender: student.gender,
+            email: student.email,
+            telephone: student.telephone,
+        });
+        setEditMode(true);
+
+    }
+    
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
-            if (response.ok) {
-              console.log("Data submitted successfully");
-            //   alert(response.data);
-            } else {
-              console.error("Error submitting data");
-              console.log(studentList);
-            //   alert(response.data);
-            }
-        } catch (error) {
-            console.error("Error: ", error);
-          }
+        // e.preventDefault();
+        // try {
+        //     const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
+        //     if (response.ok) {
+        //       console.log("Data submitted successfully");
+        //     //   alert(response.data);
+        //     } else {
+        //       console.error("Error submitting data");
+        //       console.log(studentList);
+        //     //   alert(response.data);
+        //     }
+        // } catch (error) {
+        //     console.error("Error: ", error);
+        // }
+        const timer = setTimeout(() => {
+            navigate("/");
+          }, 10);
+
     };
 
     const generateAlertMsg = (message, time) => {
@@ -129,7 +201,7 @@ export default function StudentRegister() {
                             <input
                                 type="text"
                                 name="full_name"
-                                value={formData.full_name}
+                                value={editMode? editData.full_name : formData.full_name}
                                 onChange={handleChange}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
@@ -204,7 +276,7 @@ export default function StudentRegister() {
                                 </label>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                             {/* email */}
                             <div className="grid grid-cols-1 md:grid-cols-4">
                                 <label className="block mb-2 font-medium">Email</label>
@@ -248,13 +320,16 @@ export default function StudentRegister() {
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-x-5">
                         <button
                             onClick={addStudent}
                             disabled={!formData.full_name || !formData.address || !formData.date_of_birth || !formData.gender || !formData.email || !formData.telephone}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-end justify-end"
                         >
-                            Add
+                            {editMode ? "Update" : "Add"}
+                        </button>
+                        <button className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex items-end justify-end ${editMode? 'block' : 'hidden'}`}>
+                                cancle
                         </button>
                     </div>
 
@@ -276,6 +351,16 @@ export default function StudentRegister() {
                                     <td className="px-4 py-2 border">{student.date_of_birth}</td>
                                     <td className="px-4 py-2 border">{student.email}</td>
                                     <td className="px-4 py-2 border">{student.telephone}</td>
+                                    <td className="px-4 py-2 border">
+                                        <div className="flex gap-4">
+                                        <button className="text-gray-500 hover:text-gray-700" onClick={() => updateData(student.id)}>
+                                            <FontAwesomeIcon icon={faEdit} />
+                                        </button>
+                                        <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(student.id)}>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

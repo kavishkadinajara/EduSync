@@ -81,25 +81,49 @@ namespace server.Controllers
 		// Add student
 		[HttpPost("AddStudent")]
 		public async Task<IActionResult> AddStudent([FromBody] Student student){
-			var validStudent = new List<Student>();
 			if (student == null){
-			return BadRequest("No student data received.");
+				return BadRequest("No student data received.");
 			}
-			if (IsUniqueTelephone(student.telephone)){
-					student.id = GenerateStudentId();
-					validStudent.Add(student);
-				}
+
+			if (!IsUniqueTelephone(student.telephone)){
+				return BadRequest("Telephone number already exists.");
+			}
+
+			student.id = GenerateStudentId();
 
 			try{
-				student.id = GenerateStudentId();
 				await _context.Students.AddAsync(student);
 				await _context.SaveChangesAsync();
 				return Ok("Student added successfully.");
 			}
-			catch (Exception ex)
-			{
-			return StatusCode(500, $"Internal server error: {ex.Message}");
+			catch (Exception ex){
+				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
+		}
+
+		// Update pending students list as admitted
+		[HttpPut("UpdateAdmitted")]
+		public async Task<IActionResult> UpdateAdmitted([FromBody] List<string> id) {
+			if (id == null || id.Count == 0) {
+				return BadRequest("No student IDs received.");
+			}
+
+			try {
+				var students = await _context.Students.Where(s => id.Contains(s.id)).ToListAsync();
+				if (students.Count == 0) {
+					return NotFound("No students found.");
+				}
+
+				foreach (var student in students) {
+					student.status = "Admitted";
+				}
+
+				await _context.SaveChangesAsync();
+				return Ok("Students updated successfully.");
+			} catch (Exception ex) {
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+
 		}
 
 		// Get student by ID
