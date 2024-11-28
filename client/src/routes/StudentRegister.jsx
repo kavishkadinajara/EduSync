@@ -175,13 +175,13 @@ export default function StudentRegister() {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
-            if (response.ok) {
+            if (response.status === 200) {
               console.log("Data submitted successfully");
-              setAlertMessage(response.message);
-              navigater();
+              setAlertMessage(response.data.message);
+              navigate("/");
             } else {
               console.error("Error submitting data");
-              setAlertMessage(response.message);
+              setAlertMessage(response.data.message);
               console.log(studentList);
             //   alert(response.data);
             }
@@ -189,12 +189,6 @@ export default function StudentRegister() {
             console.error("Error: ", error);
         }
     };
-
-    const navigater = () => {
-        const timer = setTimeout(() => {
-            navigate("/");
-          }, 10);
-    }
 
     const generateAlertMsg = (message, time) => {
         setAlert(true);
@@ -422,6 +416,7 @@ export default function StudentRegister() {
                         <button
                             onClick={handleSubmit}
                             className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
+                            disabled={studentList.length === 0}
                         >
                             Submit
                         </button>
