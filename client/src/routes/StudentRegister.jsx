@@ -26,17 +26,7 @@ export default function StudentRegister() {
     const [alertMessage, setAlertMessage] = useState("");
     const [checkFields, setCheckFields] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [editData, setEditData] = useState({
-        id: "",
-        full_name: "",
-        address: "",
-        date_of_birth: "",
-        gender: "",
-        email: "",
-        telephone: "",
-        status: "pending",
-    });
-
+    
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: light)");
         setDarkMode(darkModeMediaQuery.matches);
@@ -53,7 +43,7 @@ export default function StudentRegister() {
     }, []);
 
     const temporyId = () => {
-        const id = Math.floor(Math.random() * 1000000);
+        const id = "st" + Math.floor(Math.random() * 1000000);
         return id;
     }
 
@@ -67,19 +57,26 @@ export default function StudentRegister() {
       };
 
     const addStudent = () => {
-       if(formData.full_name && formData.email) {
-           setStudentList([...studentList, formData]);
-           setFormData({
-             id: temporyId(),
-             full_name: "",
-             address: "",
-             date_of_birth: "",
-             gender: "",
-             email: "",
-             telephone: "",
-           });
-        }        
+        const existingStudentIndex = studentList.findIndex(student => student.id === formData.id);
+        if (existingStudentIndex !== -1) {
+            const updatedList = [...studentList];
+            updatedList[existingStudentIndex] = formData;
+            setStudentList(updatedList);
+        } else {
+            setStudentList([...studentList, { ...formData, id: temporyId() }]);
+        }
+        setFormData({
+            id: "",
+            full_name: "",
+            address: "",
+            date_of_birth: "",
+            gender: "",
+            email: "",
+            telephone: "",
+            status: "active",
+        });
         console.log(studentList);
+        setEditMode(false);
     };
 
     // const addStudent = async (e) => {
@@ -120,9 +117,9 @@ export default function StudentRegister() {
     };
     
 
-    const updateData = async (id) => {
+    const updateData = (id) => {
         const student = studentList.find((student) => student.id === id);
-        setEditData({
+        setFormData({
             id: student.id,
             full_name: student.full_name,
             address: student.address,
@@ -130,9 +127,35 @@ export default function StudentRegister() {
             gender: student.gender,
             email: student.email,
             telephone: student.telephone,
+            status: "active",
         });
         setEditMode(true);
-    }
+    };
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (formData.full_name && formData.email) {
+    //         if (editMode) {
+    //             // Update existing student
+    //             setStudentList(studentList.map((student) =>
+    //                 student.id === formData.id ? formData : student
+    //             ));
+    //             setEditMode(false);
+    //         } else {
+    //             // Add new student
+    //             setStudentList([...studentList, { ...formData, id: temporyId() }]);
+    //         }
+    //         setFormData({
+    //             id: "",
+    //             full_name: "",
+    //             address: "",
+    //             date_of_birth: "",
+    //             gender: "",
+    //             email: "",
+    //             telephone: "",
+    //         });
+    //     }
+    // };
 
     const cancelUpdate = () => {
         setEditMode(false);
@@ -143,8 +166,8 @@ export default function StudentRegister() {
             date_of_birth: "",
             telephone: "",
             email: "",
-            gender: "", // Include other fields if necessary
-            status: "pending" // Reset status if needed
+            gender: "",
+            status: "pending"
         });
     };
     
@@ -154,20 +177,24 @@ export default function StudentRegister() {
             const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
             if (response.ok) {
               console.log("Data submitted successfully");
-            //   alert(response.data);
+              setAlertMessage(response.message);
+              navigater();
             } else {
               console.error("Error submitting data");
+              setAlertMessage(response.message);
               console.log(studentList);
             //   alert(response.data);
             }
         } catch (error) {
             console.error("Error: ", error);
         }
+    };
+
+    const navigater = () => {
         const timer = setTimeout(() => {
             navigate("/");
           }, 10);
-
-    };
+    }
 
     const generateAlertMsg = (message, time) => {
         setAlert(true);
@@ -222,7 +249,7 @@ export default function StudentRegister() {
                                 id="full_name"
                                 type="text"
                                 name="full_name"
-                                value={editMode? editData.full_name : formData.full_name}
+                                value={formData.full_name}
                                 onChange={editMode? handleChange : editHandleChange}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
@@ -234,7 +261,7 @@ export default function StudentRegister() {
                                 id="address"
                                 type="text"
                                 name="address"
-                                value={editMode? editData.address : formData.address}
+                                value={formData.address}
                                 onChange={editMode? handleChange : editHandleChange}
                                 className={`border rounded-md col-span-3 w-full px-4 py-2`}
                                 readOnly={editMode? false : !formData.full_name}
@@ -366,6 +393,7 @@ export default function StudentRegister() {
                                 <th className="text-left px-4 py-2 border">Date of Birth</th>
                                 <th className="text-left px-4 py-2 border">Email</th>
                                 <th className="text-left px-4 py-2 border">Telephone</th>
+                                <th className="text-left px-4 py-2 border">Action</th>
                             </tr>
                         </thead>
                         <tbody>
