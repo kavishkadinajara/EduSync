@@ -66,38 +66,11 @@ export default function StudentRegister() {
         });
       };
 
-    // const addStudent = () => {
-    //    if(formData.full_name && formData.email) {
-    //        setStudentList([...studentList, formData]);
-    //        setFormData({
-    //          id: temporyId(),
-    //          full_name: "",
-    //          address: "",
-    //          date_of_birth: "",
-    //          gender: "",
-    //          email: "",
-    //          telephone: "",
-    //        });
-    //     }        
-    //     console.log(studentList);
-    // };
-
-    const addStudent = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post("http://localhost:5000/api/student/AddStudent", formData);
-            if (response.ok) {
-              console.log("Data submitted successfully");
-            } else {
-                console.error("Error submitting data");
-            }
-        } catch (error) {
-            console.error(error);
-        }
-        if(formData.full_name && formData.email) {
+    const addStudent = () => {
+       if(formData.full_name && formData.email) {
            setStudentList([...studentList, formData]);
            setFormData({
-             id: {temporyId},
+             id: temporyId(),
              full_name: "",
              address: "",
              date_of_birth: "",
@@ -105,11 +78,45 @@ export default function StudentRegister() {
              email: "",
              telephone: "",
            });
-        }
-    }
+        }        
+        console.log(studentList);
+    };
+
+    // const addStudent = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await axios.post("http://localhost:5000/api/student/AddStudent", formData);
+    //         if (response.ok) {
+    //           console.log("Data submitted successfully");
+    //         } else {
+    //             console.error("Error submitting data");
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    //     if(formData.full_name && formData.email) {
+    //        setStudentList([...studentList, formData]);
+    //        setFormData({
+    //          id: {temporyId},
+    //          full_name: "",
+    //          address: "",
+    //          date_of_birth: "",
+    //          gender: "",
+    //          email: "",
+    //          telephone: "",
+    //        });
+    //     }
+    // }
 
     const handleDelete = (id) => {
-        setStudentList(studentList.filter((student) => student.id !== id));
+        const confirmDelete = window.confirm("Are you sure you want to delete this student?");
+        if (confirmDelete) {
+            setStudentList(studentList.filter((student) => student.id !== id));
+        }
+    };
+
+    const editHandleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
     
 
@@ -125,24 +132,37 @@ export default function StudentRegister() {
             telephone: student.telephone,
         });
         setEditMode(true);
-
     }
+
+    const cancelUpdate = () => {
+        setEditMode(false);
+        setFormData({
+            id: "",
+            full_name: "",
+            address: "",
+            date_of_birth: "",
+            telephone: "",
+            email: "",
+            gender: "", // Include other fields if necessary
+            status: "pending" // Reset status if needed
+        });
+    };
     
     const handleSubmit = async (e) => {
-        // e.preventDefault();
-        // try {
-        //     const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
-        //     if (response.ok) {
-        //       console.log("Data submitted successfully");
-        //     //   alert(response.data);
-        //     } else {
-        //       console.error("Error submitting data");
-        //       console.log(studentList);
-        //     //   alert(response.data);
-        //     }
-        // } catch (error) {
-        //     console.error("Error: ", error);
-        // }
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:5000/api/student/AddStudents", studentList);
+            if (response.ok) {
+              console.log("Data submitted successfully");
+            //   alert(response.data);
+            } else {
+              console.error("Error submitting data");
+              console.log(studentList);
+            //   alert(response.data);
+            }
+        } catch (error) {
+            console.error("Error: ", error);
+        }
         const timer = setTimeout(() => {
             navigate("/");
           }, 10);
@@ -199,10 +219,11 @@ export default function StudentRegister() {
                             {/* full name */}
                             <label className="block mb-2 font-medium  w-full">Full Name</label>
                             <input
+                                id="full_name"
                                 type="text"
                                 name="full_name"
                                 value={editMode? editData.full_name : formData.full_name}
-                                onChange={handleChange}
+                                onChange={editMode? handleChange : editHandleChange}
                                 className="border rounded-md col-span-3 w-full px-4 py-2"
                             />
                         </div>
@@ -210,13 +231,14 @@ export default function StudentRegister() {
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Address</label>
                             <input
+                                id="address"
                                 type="text"
                                 name="address"
-                                value={formData.address}
-                                onChange={handleChange}
+                                value={editMode? editData.address : formData.address}
+                                onChange={editMode? handleChange : editHandleChange}
                                 className={`border rounded-md col-span-3 w-full px-4 py-2`}
-                                readOnly={!formData.full_name}
-                                onClick={() => generateAlertMsg(!formData.full_name ? `Please fill the Full Name field first` : "", 4000)}
+                                readOnly={editMode? false : !formData.full_name}
+                                onClick={() => generateAlertMsg(editMode? "" :!formData.full_name ? `Please fill the Full Name field first` : "", 4000)}
                             />
                         </div>
 
@@ -281,6 +303,7 @@ export default function StudentRegister() {
                             <div className="grid grid-cols-1 md:grid-cols-4">
                                 <label className="block mb-2 font-medium">Email</label>
                                 <input
+                                    id="email"
                                     type="email"
                                     name="email"
                                     value={formData.email}
@@ -302,6 +325,7 @@ export default function StudentRegister() {
                         <div className="grid grid-cols-1 md:grid-cols-4">
                             <label className="block mb-2 font-medium">Telephone</label>
                             <input
+                            id="telephone"
                                 type="tel"
                                 name="telephone"
                                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
@@ -328,8 +352,8 @@ export default function StudentRegister() {
                         >
                             {editMode ? "Update" : "Add"}
                         </button>
-                        <button className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex items-end justify-end ${editMode? 'block' : 'hidden'}`}>
-                                cancle
+                        <button onClick={cancelUpdate} className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex items-end justify-end ${editMode? 'block' : 'hidden'}`}>
+                                cancel
                         </button>
                     </div>
 
